@@ -18,7 +18,7 @@ class Matrix {
     Matrix(const std::size_t rows, const std::size_t cols): 
         rows_(rows), cols_(cols), JaggedArray(rows, cols) {}
 
-    Matrix(Iter elems_begin, Iter elems_end, const std::size_t rows, const std::size_t cols): 
+    Matrix(const std::size_t rows, const std::size_t cols, Iter elems_begin, Iter elems_end): 
         rows_(rows), cols_(cols), JaggedArray(rows, cols, elems_begin, elems_end) {}
 
     static Matrix<T> diag(const std::size_t n, const T value) {
