@@ -13,7 +13,7 @@ class Array {
   public:
     Array() = default;
 
-    Array(std::size_t size, const T& value) : size_(size) {
+    Array(std::size_t size, const T& value) {
         reallocate_and_fill(size, value);
     }
 
@@ -26,7 +26,7 @@ class Array {
     }
 
     Array(Array&& other) {
-        std::swap(*this, other);
+        swap(other);
     }
 
     Array& operator=(const Array& other) {
@@ -35,7 +35,7 @@ class Array {
         }
 
         Array temp(other);
-        std::swap(*this, temp);
+        swap(temp);
 
         return *this;
     }
@@ -45,7 +45,7 @@ class Array {
             return *this;
         }
 
-        std::swap(*this, other);
+        swap(other);
 
         return *this;
     }
@@ -54,7 +54,6 @@ class Array {
     std::size_t size() const { return size_; }
     bool empty() const { return size() == 0; }
 
-  private:
     T* begin() { return data_; } 
     const T* begin() const { return data_; } 
 
@@ -75,6 +74,11 @@ class Array {
     }
 
   private:
+    void swap(Array& other) {
+        std::swap(data_, other.data_);
+        std::swap(size_, other.size_);
+    }
+
     static T* allocate(std::size_t capacity) {
         return new T[capacity];
     }
@@ -117,6 +121,19 @@ class Array {
     std::size_t size_ = 0;
     T* data_ = nullptr;
 };
+
+template<typename T>
+inline std::ostream& operator<<(std::ostream& ostream, const Array<T>& array) {
+    for (auto it = array.begin(); it != array.end(); ++it) {
+        if (it != array.begin()) {
+            ostream << ", ";
+        }
+
+        ostream << *it;
+    }
+
+    return ostream;
+}
 
 template<typename T>
 class JaggedArray {
@@ -164,6 +181,17 @@ class JaggedArray {
     JaggedArray(std::size_t n_rows, const Array<std::size_t>& sizes, const Array<T>& elements) 
         : JaggedArray(n_rows, sizes.begin(), sizes.end(), elements.begin(), elements.end()) {}
 
+    JaggedArray(std::initializer_list<std::initializer_list<T>> init_lists) 
+        : data_(init_lists.size()) 
+    {
+        std::size_t row_idx = 0;
+        for (const auto& row_list : init_lists) {
+            data_[row_idx].resize(row_list.size());
+            std::copy(row_list.begin(), row_list.end(), data_[row_idx].begin());
+            ++row_idx;
+        }
+    }
+
   public:
     Array<T>& operator[](std::size_t idx) {
         return data_[idx];
@@ -174,6 +202,12 @@ class JaggedArray {
     }
 
   public:
+    Array<T>* begin() { return data_.begin(); } 
+    const Array<T>* begin() const { return data_.begin(); } 
+
+    Array<T>* end() { return data_.end(); } 
+    const Array<T>* end() const { return data_.end(); } 
+
     bool empty() const { return data_.empty(); }
 
     std::size_t n_rows() const {
@@ -197,6 +231,19 @@ class JaggedArray {
 };
 
 template<typename T>
+inline std::ostream& operator<<(std::ostream& ostream, const JaggedArray<T>& array) {
+    for (auto it = array.begin(); it != array.end(); ++it) {
+        if (it != array.begin()) {
+            ostream << "\n";
+        }
+
+        ostream << *it;
+    }
+
+    return ostream;
+}
+
+template<typename T>
 class RectangularArray : public JaggedArray<T> {
   public:
     RectangularArray() = default;
@@ -211,6 +258,9 @@ class RectangularArray : public JaggedArray<T> {
 
     RectangularArray(std::size_t n_rows, std::size_t n_cols, const Array<T>& elems) 
         : JaggedArray<T>(n_rows, n_cols, elems) {}
+
+    RectangularArray(std::initializer_list<std::initializer_list<T>> init_lists)
+        : JaggedArray<T>(init_lists) {}
     
   public:
     using JaggedArray<T>::operator[];
