@@ -10,16 +10,16 @@ class Array {
   public:
     Array() = default;
 
-    Array(std::size_t capacity) : capacity_(capacity), data_(allocate(capacity)) {}
+    Array(std::size_t size) : size_(size), data_(allocate(size)) {}
 
     ~Array() { deallocate(data_); }
 
-    Array(const Array& other) : capacity_(other.capacity()), data_(allocate(capacity())) {
-        std::copy(other.data(), other.data() + capacity(), data_);
+    Array(const Array& other) : size_(other.size()), data_(allocate(size())) {
+        std::copy(other.data(), other.data() + size(), data_);
     }
 
     Array(Array&& other) {
-        std::swap(other)
+        std::swap(*this, other)
     }
 
     Array& operator=(const Array& other) {
@@ -28,7 +28,7 @@ class Array {
         }
 
         Array temp(other);
-        std::swap(temp);
+        std::swap(*this, temp);
 
         return *this;
     }
@@ -38,15 +38,18 @@ class Array {
             return *this;
         }
 
-        std::swap(other);
+        std::swap(*this, other);
 
         return *this;
     }
 
   public:
+    std::size_t size() const { return size_; }
+    bool empty() const { return size() == 0; }
+
+  private:
     T* data() { return data_; } 
     const T* data() const { return data_; } 
-    std::size_t capacity() const { return capacity_; }
 
   public:
     T& operator[](std::size_t idx) { return data_[idx]; }
@@ -61,22 +64,38 @@ class Array {
     }
 
   private:
-    std::size_t capacity_ = 0;
+    std::size_t size_ = 0;
     T* data_{};
 };
 
-// template<typename T, typename Iter>
-// // requires std::same_as<std::iter_value_t<ContainerIter>, T>
-// class JaggedArray {
-//   public:
-//     JaggedArray() = default;
-//     JaggedArray(std::size_t n_rows, std::size_t n_cols) {}
-//     JaggedArray(std::size_t n_rows, Iter sizes_begin, Iter sizes_end) {}
+template<typename T, typename Iter>
+// requires std::same_as<std::iter_value_t<ContainerIter>, T>
+class JaggedArray {
+  public:
+    JaggedArray() = default;
 
+    JaggedArray(std::size_t n_rows, Iter sizes_begin, Iter sizes_end) {}
+    JaggedArray(std::size_t n_rows, Iter sizes_begin, Iter sizes_end, Iter elems_begin, Iter elems_end) {}
 
-//   private:
-//     Array* data_;
-//     std::size_t n_rows_;
-// };
+    JaggedArray(std::size_t n_rows, std::size_t n_cols) {}
+    JaggedArray(std::size_t n_rows, std::size_t n_cols, Iter elems_begin, Iter elems_end) {}
 
+  public:
+    bool empty() const { return data_.empty(); }
+    bool is_rectangular() const { return is_rectangular; }
+
+  public:
+    std::size_t n_rows() const {
+        return data_.size();
+    }
+
+    std::size_t n_cols() const requires (is_rectangular() && !empty()) {
+        return data_[0].size();
+    }
+
+  private:
+    Array<Array<T>> data_{};
+    bool is_rectangular = false;
 };
+
+}; // namespace mtx
