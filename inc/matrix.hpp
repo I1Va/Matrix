@@ -58,6 +58,13 @@ class Matrix {
         return *this;
     }
 
+
+
+    void resize(std::size_t new_n_cols, std::size_t new_n_rows) {
+        
+    }
+
+
     Matrix<T> transpose() const {
         Matrix<T> res_matrix(n_cols, n_rows);
         for (std::size_t i = 0; i < n_rows(); i++) {
