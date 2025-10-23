@@ -21,6 +21,11 @@ class Matrix {
     Matrix(const std::size_t n_rows, const std::size_t n_cols, Iter elems_begin, Iter elems_end) 
         : data_(n_rows, n_cols, elems_begin, elems_end) {}
 
+
+    Matrix(std::initializer_list<std::initializer_list<T>> init_lists)
+        : data_(init_lists) {}
+
+
     static Matrix<T> diag(const std::size_t size, const T value) {
         Matrix<T> diag_matrix(size, size);
         for (std::size_t i = 0; i < size; i++)
@@ -58,12 +63,10 @@ class Matrix {
         return *this;
     }
 
-
-
     void resize(std::size_t new_n_cols, std::size_t new_n_rows) {
-        
+        data_.resize_width(new_n_cols);
+        data_.resize_height(new_n_rows);
     }
-
 
     Matrix<T> transpose() const {
         Matrix<T> res_matrix(n_cols, n_rows);
