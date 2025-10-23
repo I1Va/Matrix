@@ -53,10 +53,11 @@ class Matrix {
         return *this;
     }
 
-    Matrix& transpose()& {
+    Matrix<T> transpose() const {
+        Matrix<T> res_matrix(n_cols, n_rows);
         for (std::size_t i = 0; i < n_rows_; i++) {
-            for (std::size_t j = 0; j < i; j++) {
-                std::swap(data_[i][j], data_[j][i]);
+            for (std::size_t j = 0; j < n_cols_; j++) {
+                res_matrix[i][j] = data_[j][i];
             }
         }
 
