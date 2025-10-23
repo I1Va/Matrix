@@ -15,7 +15,7 @@ void matrix_lower_triangle_random_fill(mtx::Matrix<double> &matrix) {
 
     for (std::size_t i = 0; i < matrix.n_cols(); ++i) {
         for (std::size_t j = 0; j < i; ++j) {
-            matrix[j][i] = test::randomDouble(-MAX_MATRIX_VALUE, MAX_MATRIX_VALUE);
+            matrix[j][i] = test::random_double(-MAX_MATRIX_VALUE, MAX_MATRIX_VALUE);
         }
     }   
 }
@@ -24,11 +24,11 @@ void shuffle_matrix(mtx::Matrix<double> &matrix, const double max_abs_row_coef) 
     if (matrix.n_rows() == 1) return;
 
     for (std::size_t dst_row_idx = 0; dst_row_idx < matrix.n_rows(); ++dst_row_idx) {
-        std::size_t source_row_idx = (std::size_t) test::randomInt(0, matrix.n_rows());
+        std::size_t source_row_idx = (std::size_t) test::random_int(0, matrix.n_rows());
         while (source_row_idx == dst_row_idx) {
-            source_row_idx = (std::size_t) test::randomInt(0, matrix.n_rows());
+            source_row_idx = (std::size_t) test::random_int(0, matrix.n_rows());
         }
-        double src_row_coef = test::randomDouble(-max_abs_row_coef, max_abs_row_coef);
+        double src_row_coef = test::random_double(-max_abs_row_coef, max_abs_row_coef);
         for (std::size_t col_idx = 0; col_idx < matrix.n_cols(); ++col_idx) {
             matrix[dst_row_idx][col_idx] += matrix[source_row_idx][col_idx] * src_row_coef;
         }
