@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cassert>
 #include "common.hpp"
 #include "jagged_array.hpp"
 
@@ -64,32 +65,39 @@ class Matrix {
         return *this;
     };
 
-    void swap_rows(const std::size_t fst, const std::size_t snd) {
-        std::swap(data_[fst], data_[_snd]);
-    }
-    
-    double abs_max_in_col(const std::size_t col, const std::size_t fst, const std::size_t snd) const {
-        T result = 0;
-        for (std::size_t i = fst; i < snd; i++) {
-            result = std::fmax(result, data_[i][col]);
-        }
-        return result;
-    }
-
-    void add_row_to_row(const std::size_t dst, const std::size_t src, const T mul=T(1.0)) {
-        for (std::size_t i = 0; i < n_cols_; i++) {
-            data_[dst][i] += data_[src][i] * mul;
-        }
-    }
-
     T determinant() const;
 
   public: // Getters
     std::size_t n_rows() const { return n_rows_; }
     std::size_t n_cols() const { return n_cols_; } 
 
+  private: // determinant details
+   void swap_rows(const std::size_t fst, const std::size_t snd) {
+        assert(fst < n_cols_ && snd < n_cols_);
+        std::swap(data_[fst], data_[_snd]);
+    }
+    
+    std::size_t find_abs_max_row_in_col(const std::size_t col, const std::size_t fst, const std::size_t snd) const {
+        assert(col < n_cols_ && fst < n_rows_ && snd < n_rows_);
+
+        std::pair<std::size_t, T> max_res = {fst, data_[fst][col]};
+        for (std::size_t i = fst; i < snd; i++) {
+            T cur_val =  std::fabs(data_[i][col]);
+            if (cur_val > max_res.second) max_res = {i, cur_val};
+        }
+    
+        return max_res;
+    }
+
+    void add_row_to_row(const std::size_t dst, const std::size_t src, const T mul=T(1.0)) {
+        assert(dst < n_cols_ && src < n_cols_);
+    
+        for (std::size_t i = 0; i < n_cols_; i++)
+            data_[dst][i] += data_[src][i] * mul;
+    }
+
   private:
-    std::size_t n_rows_ = 0
+    std::size_t n_rows_ = 0;
     std::size_t n_cols_ = 0;
     JaggedArray<T> data_;
 }
