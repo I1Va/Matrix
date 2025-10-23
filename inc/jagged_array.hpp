@@ -9,7 +9,7 @@ namespace mtx {
 template<typename Iter, typename T>
 concept IteratorOf = std::same_as<std::iter_value_t<Iter>, T>;
 
-template<typename T>
+template <typename T>
 class Array {
   public:
     Array() = default;
@@ -128,7 +128,7 @@ class Array {
     T* data_ = nullptr;
 };
 
-template<typename T>
+template <typename T>
 inline std::ostream& operator<<(std::ostream& ostream, const Array<T>& array) {
     for (auto it = array.begin(); it != array.end(); ++it) {
         if (it != array.begin()) {
@@ -141,7 +141,7 @@ inline std::ostream& operator<<(std::ostream& ostream, const Array<T>& array) {
     return ostream;
 }
 
-template<typename T>
+template <typename T>
 class JaggedArray {
   public:
     JaggedArray() = default;
@@ -175,6 +175,9 @@ class JaggedArray {
             }
         }
     }
+
+    JaggedArray(std::size_t n_rows, const Array<std::size_t>& sizes) 
+        : JaggedArray(n_rows, sizes.begin(), sizes.end()) {}
 
     JaggedArray(std::initializer_list<std::initializer_list<T>> init_lists) 
         : data_(init_lists.size()) 
@@ -225,7 +228,7 @@ class JaggedArray {
     Array<Array<T>> data_{};
 };
 
-template<typename T>
+template <typename T>
 inline std::ostream& operator<<(std::ostream& ostream, const JaggedArray<T>& array) {
     for (auto it = array.begin(); it != array.end(); ++it) {
         if (it != array.begin()) {
@@ -238,7 +241,7 @@ inline std::ostream& operator<<(std::ostream& ostream, const JaggedArray<T>& arr
     return ostream;
 }
 
-template<typename T>
+template <typename T>
 class RectangularArray : public JaggedArray<T> {
   public:
     RectangularArray() = default;
