@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <utility>
+#include <iostream>
 
 namespace mtx {
 
@@ -17,7 +18,13 @@ class Array {
         reallocate_and_fill(size, value);
     }
 
-    Array(std::size_t size) : Array(size, T{}) {}
+    Array(std::initializer_list<T> init_list) : size_(init_list.size()) {
+        data_ = allocate(size());
+
+        std::copy(init_list.begin(), init_list.end(), data_);
+    }
+
+    explicit Array(std::size_t size) : Array(size, T{}) {}
 
     ~Array() { deallocate(data_); }
 
@@ -103,7 +110,6 @@ class Array {
         size_ = new_size;
     }
 
-
     void reallocate_and_fill(std::size_t new_size, const T& value) {
         std::size_t old_size = size();
 
@@ -169,17 +175,6 @@ class JaggedArray {
             }
         }
     }
-
-    template<typename Iter>
-    requires IteratorOf<Iter, std::size_t>
-    JaggedArray(std::size_t n_rows, const Array<std::size_t>& sizes, Iter elems_begin, Iter elems_end) 
-        : JaggedArray(n_rows, sizes.begin(), sizes.end(), elems_begin, elems_end) {}
-
-    JaggedArray(std::size_t n_rows, const Array<std::size_t>& sizes) 
-        : JaggedArray(n_rows, sizes.begin(), sizes.end()) {}
-
-    JaggedArray(std::size_t n_rows, const Array<std::size_t>& sizes, const Array<T>& elements) 
-        : JaggedArray(n_rows, sizes.begin(), sizes.end(), elements.begin(), elements.end()) {}
 
     JaggedArray(std::initializer_list<std::initializer_list<T>> init_lists) 
         : data_(init_lists.size()) 
@@ -255,9 +250,6 @@ class RectangularArray : public JaggedArray<T> {
     requires IteratorOf<Iter, T>
     RectangularArray(std::size_t n_rows, std::size_t n_cols, Iter elems_begin, Iter elems_end) 
         : JaggedArray<T>(n_rows, n_cols, elems_begin, elems_end) {}
-
-    RectangularArray(std::size_t n_rows, std::size_t n_cols, const Array<T>& elems) 
-        : JaggedArray<T>(n_rows, n_cols, elems) {}
 
     RectangularArray(std::initializer_list<std::initializer_list<T>> init_lists)
         : JaggedArray<T>(init_lists) {}
