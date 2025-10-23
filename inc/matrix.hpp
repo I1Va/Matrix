@@ -21,6 +21,9 @@ class Matrix {
     Matrix(const std::size_t n_rows, const std::size_t n_cols, Iter elems_begin, Iter elems_end) 
         : data_(n_rows, n_cols, elems_begin, elems_end) {}
 
+    Matrix(std::initializer_list<std::initializer_list<T>> init_lists)
+        : RectangularArray<T>(init_lists) {}
+
     static Matrix<T> diag(const std::size_t size, const T value) {
         Matrix<T> diag_matrix(size, size);
         for (std::size_t i = 0; i < size; i++)
