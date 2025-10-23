@@ -5,7 +5,7 @@ mkdir temp_files
 for size in 1 2 3 4 5 10 20 30 40 50 60 70 80 90 100; do
     expected_determinant=$(awk -v seed=$RANDOM 'BEGIN{srand(seed); printf "%.4f\n", (rand()*200 - 100)}')
 
-    build/tests/generate $size $expected > temp_files/test1.txt
+    build/tests/MatrixGenerator $size $expected > temp_files/test1.txt
     actual_determinant=$(build/Matrix < temp_files/test1.txt)
 
     diff=$(echo "$actual_determinant - $expected_determinant" | bc -l)

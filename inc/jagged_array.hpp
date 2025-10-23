@@ -224,7 +224,7 @@ class JaggedArray {
         std::swap(data_[first_idx], data_[second_idx]);
     }
 
-  private:
+  protected:
     Array<Array<T>> data_{};
 };
 
@@ -262,6 +262,21 @@ class RectangularArray : public JaggedArray<T> {
 
   public:  
     using JaggedArray<T>::n_rows;
+
+    void resize_width(std::size_t new_width) {
+        for (std::size_t row_idx = 0; row_idx < n_rows(); row_idx++) {
+            JaggedArray<T>::data_[row_idx].resize(new_width);
+        }
+    }
+
+    void resize_height(std::size_t new_height) {
+        std::size_t old_height = n_rows();
+
+        JaggedArray<T>::data_.resize(new_height);
+        for (std::size_t i = old_height; i < new_height; i++) {
+            JaggedArray<T>::data_[i] = Array<T>(n_cols());
+        }
+    }
 
     std::size_t n_cols() const {
         if (this->empty()) {
