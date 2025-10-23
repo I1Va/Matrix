@@ -9,16 +9,15 @@ namespace mtx
 
 template <FloatingPoint T>
 class Matrix {
-  public: // Constructors
-    template<typename Iter>
-    requires std::same_as<std::iter_value_t<Iter>, T>
-    
+  public: // Constructors    
     explicit Matrix(const std::size_t n): 
         n_rows_(n), n_cols(n), JaggedArray(n, n) {}
 
     Matrix(const std::size_t n_rows, const std::size_t n_cols): 
         n_rows_(n_rows), n_cols_(n_cols), JaggedArray(n_rows, n_cols) {}
 
+    template<typename Iter>
+    requires std::same_as<std::iter_value_t<Iter>, T>
     Matrix(const std::size_t n_rows_, const std::size_t n_cols, Iter elems_begin, Iter elems_end): 
         n_rows_(n_rows), n_cols(n_cols), JaggedArray(n_rows, n_cols, elems_begin, elems_end) {}
 
