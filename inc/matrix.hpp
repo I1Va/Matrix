@@ -22,11 +22,11 @@ class Matrix {
         n_rows_(n_rows), n_cols(n_cols), JaggedArray(n_rows, n_cols, elems_begin, elems_end) {}
 
     static Matrix<T> diag(const std::size_t n, const T value) {
-        Matrix<T> eye_matrix(n, n);
+        Matrix<T> diag_matrix(n, n);
         for (std::size_t i = 0; i < n; i++)
-            eye_matrix[i][i] = value;
+            diag_matrix[i][i] = value;
         
-        return eye_matrix;
+        return diag_matrix;
     }
 
     static Matrix<T> identity(const std::size_t n) {
