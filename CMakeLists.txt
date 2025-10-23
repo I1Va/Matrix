@@ -5,5 +5,7 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_executable(Matrix main.cpp)
-target_include_directories(Matrix PRIVATE ${CMAKE_SOURCE_DIR}/inc)
+
+target_include_directories(Matrix PUBLIC ${CMAKE_SOURCE_DIR}/inc)
+
 

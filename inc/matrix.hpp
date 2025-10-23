@@ -36,6 +36,7 @@ class Matrix {
   public: // getters
     std::size_t n_rows() const { return data_.n_rows(); }
     std::size_t n_cols() const { return data_.n_cols(); } 
+    const RectangularArray<T> data() const { return data_; }
 
   public: // operators
     Array<T>& operator[](const std::size_t idx) {
@@ -68,13 +69,14 @@ class Matrix {
         return res_matrix;
     };
 
-    T determinant() const;
-
-  private: // determinant details
     void swap_rows(const std::size_t fst_idx, const std::size_t snd_idx) {
         data_.swap_rows(fst_idx, snd_idx);
     }
-    
+
+    T determinant() const;
+
+  private: // determinant details
+
     std::size_t find_row_with_max_abs_value_in_column_range(const std::size_t column, const std::size_t start_row, const std::size_t end_row) const {
         assert(column < n_cols());
         assert(start_row < n_rows() && end_row < n_rows());
@@ -107,5 +109,12 @@ class Matrix {
   private: // fields
     RectangularArray<T> data_{};
 };
+
+template<FloatingPoint T>
+std::ostream& operator<<(std::ostream& ostream, const Matrix<T>& matrix) {
+    ostream << matrix.data();
+
+    return ostream;
+}
 
 } // namespace mtx
