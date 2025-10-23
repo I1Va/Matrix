@@ -1,7 +1,8 @@
 #pragma once
 
 #include "common.hpp"
-#include "jaggedArray.hpp"
+#include "jagged_array.hpp"
+
 
 namespace mtx 
 {
