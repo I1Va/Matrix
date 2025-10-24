@@ -8,7 +8,7 @@
 void scan_matrix(const std::size_t n, std::vector<std::vector<double>> &matrix) {
     for (std::size_t i = 0; i < n; i++) {
         for (std::size_t j = 0; j < n; j++) {
-            std::cin >> matrix[i][i];
+            std::cin >> matrix[i][j];
         }
     }
 }
@@ -27,6 +27,7 @@ double get_eigen_determinant(const std::size_t n, const std::vector<std::vector<
 
 double get_our_determinant(const std::size_t n, const std::vector<std::vector<double>> &input_matrix) {
     mtx::Matrix<double> A(n, n);
+
     for (std::size_t i = 0; i < n; i++) {
         for (std::size_t j = 0; j < n; j++) {
             A[i][j] = input_matrix[i][j];
@@ -36,7 +37,6 @@ double get_our_determinant(const std::size_t n, const std::vector<std::vector<do
     return A.determinant();
 }
 
-
 int main () {
     std::size_t n = 0;
     std::cin >> n;
@@ -45,9 +45,5 @@ int main () {
     scan_matrix(n, matrix);
 
     std::cout << "eigen : " << get_eigen_determinant(n, matrix) << '\n';
-    std::cout << "out   : " << get_our_determinant(n, matrix) << '\n';
+    std::cout << "our   : " << get_our_determinant  (n, matrix) << '\n';
 }
-
-
-
-
