@@ -4,12 +4,15 @@
 #include <matrix.hpp>
 
 int main () {
-    mtx::Matrix<double> mtx = {{1, 1, 1}, {1, 3, 4}, {2, 5, 1}};
+    std::size_t size = 0;
+    std::cin >> size;
 
-    mtx.resize(5, 5);
-    std:: cout << mtx << '\n' << std::endl;;
+    mtx::Matrix<long double> matrix(size);
+    for (std::size_t i = 0; i < size; i++) {
+        for (std::size_t j = 0; j < size; j++) {
+            std::cin >> matrix[i][j];
+        }
+    }
 
-    // mtx.swap_rows(0, 1);
-
-    // std::cout << mtx << std::endl;
+    std::cout << matrix.determinant();
 }

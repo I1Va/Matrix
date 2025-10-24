@@ -80,7 +80,7 @@ class Matrix {
     void swap_rows(const std::size_t fst_idx, const std::size_t snd_idx) {
         data_.swap_rows(fst_idx, snd_idx);
     }
-
+    
     T determinant() const {
         bool flag_sign = 0;
         Matrix cur_matrix(*this);
@@ -90,7 +90,7 @@ class Matrix {
                 return 0;
             }
             if (row_idx_max_value != row_idx) {
-                flag_sign = ~flag_sign;
+                flag_sign = !flag_sign;
                 cur_matrix.swap_rows(row_idx_max_value, row_idx);
             }
             for (std::size_t row_idx_2 = row_idx + 1; row_idx_2 < n_rows(); ++row_idx_2) {
