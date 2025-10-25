@@ -7,6 +7,7 @@ add_executable(IdealDeterminant ideal_count_determinant.cpp)
 target_link_libraries(IdealDeterminant Eigen3::Eigen)
 
 add_executable(UnitTests unit_tests.cpp)
+target_include_directories(UnitTests PRIVATE ${CMAKE_SOURCE_DIR}/inc)
 
 target_link_libraries(UnitTests PRIVATE
    gtest
