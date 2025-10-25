@@ -12,5 +12,3 @@ target_link_libraries(UnitTests PRIVATE
    gtest
    gtest_main
 )
-target_compile_options(UnitTests PRIVATE)
-target_link_options(UnitTests PRIVATE)
