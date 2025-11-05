@@ -7,6 +7,4 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_executable(Matrix main.cpp)
 target_include_directories(Matrix PUBLIC ${CMAKE_SOURCE_DIR}/inc )
 
-
-
 add_subdirectory(tests)
