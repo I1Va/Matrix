@@ -128,13 +128,11 @@ class Matrix {
         return result_row_idx;
     }
 
-    void add_row_to_row(const std::size_t dst_row_idx, const std::size_t src_row_idx, const T mul = T(1.0)) {
+    void add_row_to_row(const std::size_t dst_row_idx, const std::size_t src_row_idx, const T& mul = T(1.0)) {
         assert(dst_row_idx < n_rows());
         assert(src_row_idx < n_rows());
     
-        for (std::size_t col_idx = 0; col_idx < n_cols(); col_idx++) {
-            data_[dst_row_idx][col_idx] += data_[src_row_idx][col_idx] * mul;
-        }
+        data_[dst_row_idx] += data_[src_row_idx] * mul;
     }
 
   private: // fields

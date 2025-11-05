@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <utility>
 #include <iostream>
+#include <iterator>
 
 namespace mtx {
 
@@ -63,6 +64,41 @@ class Array {
   public:
     T& operator[](std::size_t idx) { return data_[idx]; }
     const T& operator[](std::size_t idx) const { return data_[idx]; }
+
+    const Array& operator+=(const Array& other) {
+        std::transform(begin(), end(), other.begin(), begin(), std::plus<T>());
+        return *this;
+    }
+
+    Array operator+(const Array& other) const {
+        Array temp(*this);
+        temp += other;
+        return temp;
+    }
+
+    const Array& operator-=(const Array& other) {
+        std::transform(begin(), end(), other.begin(), begin(), std::minus<T>());
+        return *this;
+    }
+
+    Array operator-(const Array& other) const {
+        Array temp(*this);
+        temp -= other;
+        return temp;
+    }
+
+    const Array& operator*=(const T& scalar) {
+        for (std::size_t i = 0; i < size(); ++i) {
+            (*this)[i] *= scalar;
+        }
+        return *this;
+    }
+
+    Array operator*(const T& scalar) const {
+        Array temp(*this);
+        temp *= scalar;
+        return temp;
+    }
 
   public:
     std::size_t size() const { return size_; }
@@ -140,14 +176,8 @@ class Array {
 
 template <typename T>
 inline std::ostream& operator<<(std::ostream& ostream, const Array<T>& array) {
-    for (auto it = array.begin(); it != array.end(); ++it) {
-        if (it != array.begin()) {
-            ostream << ", ";
-        }
-
-        ostream << *it;
-    }
-
+    std::copy(array.begin(), array.end() - 1, std::ostream_iterator<T>(ostream, ", "));
+    ostream << *(array.end() - 1);
     return ostream;
 }
 
@@ -249,14 +279,8 @@ class JaggedArray {
 
 template <typename T>
 inline std::ostream& operator<<(std::ostream& ostream, const JaggedArray<T>& array) {
-    for (auto it = array.begin(); it != array.end(); ++it) {
-        if (it != array.begin()) {
-            ostream << "\n";
-        }
-
-        ostream << *it;
-    }
-
+    std::copy(array.begin(), array.end() - 1, std::ostream_iterator<Array<T>>(ostream, "\n"));
+    ostream << *(array.end() - 1);
     return ostream;
 }
 
