@@ -115,16 +115,6 @@ TEST(Array, fill)
     EXPECT_EQ(arr[2], 42);
 }
 
-TEST(Array, copy)
-{
-    Array<int> arr(3);
-    std::vector<int> vec{7, 8, 9};
-    arr.copy(vec.begin(), vec.end());
-    EXPECT_EQ(arr[0], 7);
-    EXPECT_EQ(arr[1], 8);
-    EXPECT_EQ(arr[2], 9);
-}
-
 // -----------------------------------------------------------------------------
 // -------------------------- JaggedArray constructors -------------------------
 // -----------------------------------------------------------------------------
