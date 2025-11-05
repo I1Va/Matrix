@@ -84,12 +84,6 @@ class Array {
         std::fill(begin(), end(), value);
     }
 
-    template <typename Iter>
-    requires IteratorOf<Iter, T>
-    void copy(Iter elems_begin, Iter elems_end) {
-        std::copy(elems_begin, elems_end, data_);
-    }
-
   private:
     void swap(Array& other) {
         std::swap(data_, other.data_);
