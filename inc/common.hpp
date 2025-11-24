@@ -43,4 +43,31 @@ inline bool FloatingPointE(T a, T b, T epsilon = std::numeric_limits<T>::epsilon
     return std::fabs(a - b) < epsilon * max_val;
 }
 
+// ------------------------------------ istream utilites ---------------------------------------------
+
+template <typename T>
+inline bool fully_scanned_val(const std::string& token, T& val) {
+    std::istringstream iss(token);
+    iss >> std::noskipws >> val; 
+    return iss && iss.eof(); 
+}
+
+template <typename T>
+inline bool scan_until_next_line(std::istream &stream, T &val) {
+    while (true) {
+        std::string token;
+        stream >> token;
+        if (stream.eof()) {
+            stream.clear();
+            return false;
+        }
+        
+        if (fully_scanned_val(token, val)) {
+            return true;
+        } else {
+            stream.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // skip untill next line or EOF
+        }
+    }
+}
+
 // ---------------------------------------------------------------------------------------------------
