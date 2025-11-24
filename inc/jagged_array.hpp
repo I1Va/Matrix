@@ -30,8 +30,6 @@ class Array {
     }
 
   public:
-    ~Array() { deallocate(data_); }
-
     Array(const Array& other) : size_(other.size()), data_(allocate(size())) {
         std::copy(other.begin(), other.end(), data_);
     }
@@ -61,10 +59,24 @@ class Array {
         return *this;
     }
 
+    ~Array() { deallocate(data_); }
+
   public:
     T& operator[](std::size_t idx) { return data_[idx]; }
     const T& operator[](std::size_t idx) const { return data_[idx]; }
 
+    T* begin() { return data_; } 
+    const T* begin() const { return data_; } 
+
+    T* end() { return begin() + size(); } 
+    const T* end() const { return begin() + size(); } 
+
+  public:
+    std::size_t size() const { return size_; }
+
+    bool empty() const { return size() == 0; }
+
+  public:
     const Array& operator+=(const Array& other) {
         std::transform(begin(), end(), other.begin(), begin(), std::plus<T>());
         return *this;
@@ -101,17 +113,6 @@ class Array {
     }
 
   public:
-    std::size_t size() const { return size_; }
-
-    T* begin() { return data_; } 
-    const T* begin() const { return data_; } 
-
-    T* end() { return begin() + size(); } 
-    const T* end() const { return begin() + size(); } 
-
-  public:
-    bool empty() const { return size() == 0; }
-
     void resize(std::size_t new_size, const T& value = T{}) {
         reallocate_and_fill(new_size, value);
     }
@@ -230,19 +231,20 @@ class JaggedArray {
         return data_[idx];
     }
 
-  public:
     Array<T>* begin() { return data_.begin(); } 
     const Array<T>* begin() const { return data_.begin(); } 
 
     Array<T>* end() { return data_.end(); } 
     const Array<T>* end() const { return data_.end(); } 
 
+  public:
     bool empty() const { return data_.empty(); }
 
     std::size_t n_rows() const {
         return data_.size();
     }
 
+  public:
     void resize(std::size_t new_size) {
         data_.resize(new_size);
     }
@@ -256,7 +258,7 @@ class JaggedArray {
     }
 
   private:
-  template<typename Iter>
+    template<typename Iter>
     void fill_from_iter(Iter begin, Iter end) {
         auto elem_it = begin;
         
@@ -279,7 +281,7 @@ inline std::ostream& operator<<(std::ostream& ostream, const JaggedArray<T>& arr
 }
 
 template <typename T>
-class RectangularArray : public JaggedArray<T> {
+class RectangularArray : private JaggedArray<T> {
   public:
     RectangularArray() = default;
 
@@ -296,11 +298,13 @@ class RectangularArray : public JaggedArray<T> {
 
   public:
     using JaggedArray<T>::operator[];
-    using JaggedArray<T>::n_rows;
+    using JaggedArray<T>::begin;
+    using JaggedArray<T>::end;
+    
+  public:
     using JaggedArray<T>::empty;
-    using JaggedArray<T>::swap_rows;
+    using JaggedArray<T>::n_rows;
 
-  public:  
     std::size_t n_cols() const {
         if (this->empty()) {
             return 0;
@@ -308,6 +312,9 @@ class RectangularArray : public JaggedArray<T> {
         
         return data_[0].size();
     }
+
+  public:  
+    using JaggedArray<T>::swap_rows;
 
     void resize(std::size_t new_size, const T& value = T{}) {
         std::size_t old_size = n_rows();
@@ -327,5 +334,12 @@ class RectangularArray : public JaggedArray<T> {
   private:
     using JaggedArray<T>::data_;
 };
+
+template <typename T>
+inline std::ostream& operator<<(std::ostream& ostream, const RectangularArray<T>& array) {
+    std::copy(array.begin(), array.end() - 1, std::ostream_iterator<Array<T>>(ostream, "\n"));
+    ostream << *(array.end() - 1);
+    return ostream;
+}
 
 }; // namespace mtx
